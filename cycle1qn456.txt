@@ -1,0 +1,268 @@
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid;
+
+    pid = fork();
+    
+    if (pid == 0) {
+        printf("Child process: PID = %d, Parent PID = %d\n", getpid(), getppid());
+    } else if (pid > 0) {
+        printf("Parent process: PID = %d, Child PID = %d\n", getpid(), pid);
+    } else {
+        perror("fork");
+        return 1;
+    }
+
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    printf("Process ID: %d\n", getpid());
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    printf("Parent Process ID: %d\n", getppid());
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    char *args[] = {"ls", "-l", NULL};
+    execv("/bin/ls", args);
+    printf("This line won't be printed if execv() succeeds\n");
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid = fork();
+    
+    if (pid == 0) {
+        // Child process
+        printf("Child process: PID = %d\n", getpid());
+        sleep(2);
+        printf("Child process exiting\n");
+    } else if (pid > 0) {
+        // Parent process
+        printf("Parent process: PID = %d, waiting for child to finish...\n", getpid());
+        wait(NULL);
+        printf("Parent process exiting\n");
+    } else {
+        perror("fork");
+        return 1;
+    }
+
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    printf("Before exit()\n");
+    exit(0);
+    printf("After exit()\n"); // This line won't be executed
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <dirent.h>
+
+int main() {
+    DIR *dir;
+    struct dirent *entry;
+
+    dir = opendir(".");
+    if (dir == NULL) {
+        perror("opendir");
+        return 1;
+    }
+
+    printf("Files in the current directory:\n");
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dir);
+
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define BUFFER_SIZE 1024
+
+int main() {
+    int fd, ret;
+    char buffer[BUFFER_SIZE];
+    struct stat st;
+
+    // Open a file for reading and writing
+    fd = open("example.txt", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+        return 1;
+    }
+
+    // Write data to the file
+    ret = write(fd, "Hello, World!\n", 14);
+    if (ret == -1) {
+        perror("write");
+        close(fd);
+        return 1;
+    }
+
+    // Reset file offset to beginning
+    lseek(fd, 0, SEEK_SET);
+
+    // Read data from the file
+    ret = read(fd, buffer, BUFFER_SIZE);
+    if (ret == -1) {
+        perror("read");
+        close(fd);
+        return 1;
+    }
+
+    // Print read data
+    printf("Data read from file: %s", buffer);
+
+    // Get file information
+    ret = fstat(fd, &st);
+    if (ret == -1) {
+        perror("stat");
+        close(fd);
+        return 1;
+    }
+
+    printf("File size: %ld bytes\n", st.st_size);
+
+    // Close the file
+    close(fd);
+
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+
+// Function prototypes
+void fcfs(int n, int burst_time[], int arrival_time[]);
+void round_robin(int n, int burst_time[], int arrival_time[], int quantum);
+void sjf(int n, int burst_time[], int arrival_time[]);
+void priority(int n, int burst_time[], int arrival_time[], int priority[]);
+
+int main() {
+    int choice, n, quantum;
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    int burst_time[n], arrival_time[n], priority[n];
+
+    printf("Enter burst time for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d", &burst_time[i]);
+    }
+
+    printf("Enter arrival time for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d", &arrival_time[i]);
+    }
+
+    printf("Enter priority for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d", &priority[i]);
+    }
+
+    printf("Enter time quantum for Round Robin: ");
+    scanf("%d", &quantum);
+
+    printf("\nChoose scheduling algorithm:\n");
+    printf("1. FCFS\n");
+    printf("2. Round Robin\n");
+    printf("3. SJF\n");
+    printf("4. Priority\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            fcfs(n, burst_time, arrival_time);
+            break;
+        case 2:
+            round_robin(n, burst_time, arrival_time, quantum);
+            break;
+        case 3:
+            sjf(n, burst_time, arrival_time);
+            break;
+        case 4:
+            priority(n, burst_time, arrival_time, priority);
+            break;
+        default:
+            printf("Invalid choice\n");
+    }
+
+    return 0;
+}
+
+void fcfs(int n, int burst_time[], int arrival_time[]) {
+    // Implement FCFS scheduling algorithm here
+}
+
+void round_robin(int n, int burst_time[], int arrival_time[], int quantum) {
+    // Implement Round Robin scheduling algorithm here
+}
+
+void sjf(int n, int burst_time[], int arrival_time[]) {
+    // Implement SJF scheduling algorithm here
+}
+
+void priority(int n, int burst_time[], int arrival_time[], int priority[]) {
+    // Implement Priority scheduling algorithm here
+}

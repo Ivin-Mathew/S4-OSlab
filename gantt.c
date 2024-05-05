@@ -12,6 +12,7 @@ typedef struct Process
     int remaining_time;
     int turnaround_time;
     int waiting_time;
+    int done;
 } Process;
 
 // Function prototypes
@@ -26,10 +27,10 @@ void table(Process p[], int n);
 
 int main()
 {
-    int n, choice, time_quantum;
+    int n=5, choice, time_quantum;
     Process processes[MAX_PROCESSES];
 
-    printf("Enter the number of processes: ");
+    /* printf("Enter the number of processes: ");
     scanf("%d", &n);
 
     if (n > MAX_PROCESSES || n <= 0)
@@ -51,8 +52,57 @@ int main()
         processes[i].remaining_time = processes[i].burst_time;
         processes[i].turnaround_time=0;
         processes[i].waiting_time=0;
-printf("\n\n");
-    }
+        printf("\n\n");
+    } */
+
+    //temporary hardcode
+    processes[0].arrival_time=0;
+    processes[0].burst_time=3;
+    processes[0].priority=1;
+    processes[0].id=1;
+    processes[0].turnaround_time=0;
+    processes[0].remaining_time=processes[0].burst_time;
+    processes[0].waiting_time=0;
+    processes[0].done=0;
+    
+    processes[1].arrival_time=2;
+    processes[1].burst_time=6;
+    processes[1].priority=3;
+    processes[1].id=2;
+    processes[1].turnaround_time=0;
+    processes[1].remaining_time=processes[0].burst_time;
+    processes[1].waiting_time=0;
+    processes[1].done=0;
+
+
+    processes[2].arrival_time=1;
+    processes[2].burst_time=5;
+    processes[2].priority=1;
+    processes[2].id=3;
+    processes[2].turnaround_time=0;
+    processes[2].remaining_time=processes[0].burst_time;
+    processes[2].waiting_time=0;
+    processes[2].done=0;
+
+    processes[3].arrival_time=5;
+    processes[3].burst_time=5;
+    processes[3].priority=5;
+    processes[3].id=4;
+    processes[3].turnaround_time=0;
+    processes[3].remaining_time=processes[0].burst_time;
+    processes[3].waiting_time=0;
+    processes[3].done=0;
+
+    processes[4].arrival_time=2;
+    processes[4].burst_time=6;
+    processes[4].priority=1;
+    processes[4].id=5;
+    processes[4].turnaround_time=0;
+    processes[4].remaining_time=processes[0].burst_time;
+    processes[4].waiting_time=0;
+    processes[4].done=0;
+
+
 
     printf("Select the scheduling algorithm:\n");
     printf("1. FCFS (First Come First Serve)\n");
@@ -62,7 +112,7 @@ printf("\n\n");
     printf("5. Exit\n");
     while (1)
     {
-        printf("Enter your choice: ");
+        printf("\n\nEnter your choice: ");
         scanf("%d", &choice);
         switch (choice)
         {
@@ -108,17 +158,16 @@ void FCFS(Process processes[], int n)
     }
 
     for(int i=0;i<n;i++){
-        processes[i].turnaround_time=current_time+processes[i].burst_time-processes[i].arrival_time;
         processes[i].waiting_time=current_time-processes[i].arrival_time;
         current_time+=processes[i].burst_time;
     }
 
 
-
-    displayGanttChart(processes, n);
-    table(processes,n);
     calculateWaitingTime(processes, n);
     calculateTurnaroundTime(processes, n);
+    displayGanttChart(processes, n);
+    table(processes,n);
+    
 }
 
 void roundRobin(Process processes[], int n, int time_quantum)
@@ -166,61 +215,70 @@ void roundRobin(Process processes[], int n, int time_quantum)
         }
     }
 
-
-    displayGanttChart(p, num);
-    table(processes,n);
     calculateWaitingTime(processes, n);
     calculateTurnaroundTime(processes, n);
+    displayGanttChart(p, num);
+    table(processes,n);
+    
 }
 
 void SJF(Process processes[], int n)
 {
-    // Sort processes based on burst time
-    for (int i = 0; i < n - 1; i++)
-    {
-        for (int j = 0; j < n - i - 1; j++)
-        {
-            if (processes[j].burst_time > processes[j + 1].burst_time && processes[j].arrival_time >= processes[j+1].arrival_time)
-            {
-                Process temp = processes[j];
-                processes[j] = processes[j + 1];
-                processes[j + 1] = temp;
+    Process temp[10];
+    int time=0;
+    for(int i=0;i<n;i++){
+        int index=-1;
+        for(int j=0;j<n;j++){
+            if(processes[j].done==1)
+                continue;
+            else{
+                if(index==-1) index=j;
+                if(processes[j].arrival_time<=time && processes[j].burst_time<=processes[index].burst_time){
+                    index=j;
+                }
             }
         }
+        processes[index].done=1;
+        time+=processes[index].burst_time;
+        temp[i]=processes[index];
     }
 
-    for(int i = 0;i < n;i++){
-   printf("%d ", processes[i].id);
-    }
 
-   
-    displayGanttChart(processes, n);
-    table(processes,n);
-    calculateWaitingTime(processes, n);
-    calculateTurnaroundTime(processes, n);
+
+    calculateWaitingTime(temp, n);
+    calculateTurnaroundTime(temp, n);
+    displayGanttChart(temp, n);
+    table(temp,n);
+    
 }
 
 void priority(Process processes[], int n)
 {
-    // Sort processes based on priority
-    for (int i = 0; i < n - 1; i++)
-    {
-        for (int j = 0; j < n - i - 1; j++)
-        {
-            if (processes[j].priority > processes[j + 1].priority && processes[j].arrival_time >= processes[j+1].arrival_time)
-            {
-                Process temp = processes[j];
-                processes[j] = processes[j + 1];
-                processes[j + 1] = temp;
+    Process temp[10];
+    int time=0;
+    for(int i=0;i<n;i++)
+        processes[i].done=0;
+
+
+    for(int i=0;i<n;i++){
+        int high=-1;
+        for(int j=0;j<n;j++){
+            if(processes[j].arrival_time<=time && processes[j].done==0){
+                if(high==-1) high=j;
+                else if(processes[j].priority>processes[high].priority)
+                    high=j;
             }
         }
+        processes[high].done=1;
+        time+=processes[high].burst_time;
+        temp[i]=processes[high];
     }
 
-   
-    displayGanttChart(processes, n);
-    table(processes,n);
-    calculateWaitingTime(processes, n);
-    calculateTurnaroundTime(processes, n);
+    calculateWaitingTime(temp, n);
+    calculateTurnaroundTime(temp, n);
+    displayGanttChart(temp, n);
+    table(temp,n);
+    
 }
 
 void calculateTurnaroundTime(Process processes[], int n)
@@ -237,11 +295,9 @@ int sum=0;
 
 void calculateWaitingTime(Process processes[], int n)
 {
-    processes[0].waiting_time = 0;
     int sum=0;
     for (int i = 1; i < n; i++)
     {
-        processes[i].waiting_time = processes[i - 1].burst_time + processes[i - 1].waiting_time - processes[i].arrival_time;
         sum+=processes[i].waiting_time;
     }
     float wt=(sum+0.0)/n;

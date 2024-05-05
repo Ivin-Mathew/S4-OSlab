@@ -229,13 +229,10 @@ void SJF(Process processes[], int n)
     for(int i=0;i<n;i++){
         int index=-1;
         for(int j=0;j<n;j++){
-            if(processes[j].done==1)
-                continue;
-            else{
+            if(processes[j].arrival_time<=time && processes[j].done==0){
                 if(index==-1) index=j;
-                if(processes[j].arrival_time<=time && processes[j].burst_time<=processes[index].burst_time){
+                else if(processes[j].burst_time<processes[index].burst_time)
                     index=j;
-                }
             }
         }
         processes[index].done=1;

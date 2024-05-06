@@ -14,3 +14,4 @@ void main()
    shmctl(shmid,IPC_RMID,NULL);
 }
 
+   

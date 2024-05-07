@@ -170,57 +170,71 @@ void FCFS(Process processes[], int n)
     
 }
 
-void roundRobin(Process processes[], int n, int time_quantum)
+void roundRobin(Process processes[], int n, int qt)
 {   
     int remaining_processes = n;
     int current_time = 0;
     int completed[MAX_PROCESSES] = {0}; // Array to track completed processes
-    Process p[100];
+    Process p[100],q[10];
+
+    for(int i=0;i<n;i++){
+        q[i]=processes[i];
+    }
+
     int num=0;
     while (remaining_processes > 0)
     {
-        for (int i = 0; i < n; i++)
-        {
-            if (processes[i].remaining_time > 0)
-            {
-            p[num].id=processes[i].id;
-            p[num].arrival_time=current_time;
-
-                if (processes[i].remaining_time <= time_quantum)
-                {
-                    current_time += processes[i].remaining_time;
-                    p[num].turnaround_time=processes[i].remaining_time;
-
-                    processes[i].turnaround_time = current_time - processes[i].arrival_time;
-                    processes[i].waiting_time = processes[i].turnaround_time - processes[i].burst_time;
-                    processes[i].remaining_time = 0;
-                    completed[i] = 1;
-                    remaining_processes--;
-
-
-                    p[num].burst_time=p[num].turnaround_time;
-                   
-                }
-                else
-                {
-                p[num].turnaround_time=time_quantum;
-                p[num].burst_time=p[num].turnaround_time;
-                    current_time += time_quantum;
-                    processes[i].remaining_time -= time_quantum;
-                }
-
-
-                num++;
+        int index=-1;
+        for(int i=0;i<n;i++){//to find earliest process
+            if(processes[i].arrival_time<=current_time && processes[i].done==0){
+                if(index==-1) index=i;
+                else if(processes[i].arrival_time<processes[index].arrival_time)
+                    index=i;
             }
         }
+
+        if(processes[index].burst_time<=qt){
+            remaining_processes--;
+            p[num].arrival_time=current_time;
+            p[num].burst_time=processes[index].burst_time;
+            p[num].turnaround_time=p[num].burst_time;
+            p[num].id=index;
+            
+            processes[index].burst_time=0;
+            current_time+=p[num].burst_time;
+
+            processes[index]=q[index];
+            processes[index].turnaround_time=current_time-processes[index].arrival_time;
+            processes[index].waiting_time=processes[index].turnaround_time-processes[index].burst_time;
+            processes[index].done=1;
+            num++;
+
+        }
+        else{
+            int temp=current_time+qt;
+            int count=0;
+            for(int i=0;i<n;i++){
+                if(i!=index && processes[i].arrival_time<=temp && processes[i].done==0){
+                    if(processes[i].burst_time<=qt)
+                        count+=processes[i].burst_time;
+                    else
+                        count+=qt;
+                }
+            }
+            p[num].arrival_time=current_time;
+            p[num].burst_time=qt;
+            p[num].turnaround_time=qt;
+            p[num].id=index;
+            num++;
+            processes[index].arrival_time+=count;
+            processes[index].burst_time-=qt;
+            current_time+=qt;
+        }   
     }
-
-
     displayGanttChart(p, num);
     table(processes,n);
     calculateWaitingTime(processes, n);
     calculateTurnaroundTime(processes, n);
-    
 }
 
 void SJF(Process processes[], int n)

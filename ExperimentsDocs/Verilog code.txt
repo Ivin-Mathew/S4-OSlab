@@ -1,0 +1,339 @@
+and.v
+
+module AND(output Y,input A,B); 
+    and(Y,A,B);
+endmodule
+module and_gate;
+    reg A,B;
+    wire Y;
+    AND instance0(Y,A,B);
+    initial begin
+    $dumpfile("andgate.vcd");
+    $dumpvars(1);
+    $display("And gate Realisation \nA BY");
+    $monitor(A," ",B," ",Y);
+    A=0;B=0;
+    #1 A=0;B=1;
+    #1 A=1;B=0;
+    #1 A=1;B=1;
+    #1;
+end
+endmodule
+
+
+
+
+or.v
+
+module OR(output Y,input A,B); 
+    or(Y,A,B);
+endmodule
+module or_gate;
+    reg A,B;
+    wire Y;
+    OR instance0(Y,A,B);
+    initial begin
+    $dumpfile("orgate.vcd");
+    $dumpvars(1);
+    $display("OR gate Realisation \nA BY");
+    $monitor(A," ",B," ",Y);
+    A=0;B=0;
+    #1 A=0;B=1;
+    #1 A=1;B=0;
+    #1 A=1;B=1;
+    #1;
+end
+endmodule
+
+
+
+
+not.v
+
+module NOT(output Y,input A); 
+    not(Y,A);
+endmodule
+module not_gate;
+    reg A;
+    wire Y;
+    NOT instance0(Y,A);
+    initial begin
+    $dumpfile("notgate.vcd");
+    $dumpvars(1);
+    $display("NOT gate Realisation \nA Y");
+    $monitor(A," ",Y);
+    A=0;
+    #1 A=1;
+    #1;
+end
+endmodule
+
+
+
+
+
+
+circuit 1
+
+
+module circuit(output f,input a,b,c);
+wire abar,bbar, cbar,t1,t2,t3;
+not (abar,a),(bbar,b), (cbar,c);
+and (t1,abar,b), (t2,b,cbar), (t3,bbar,cbar); 
+or (f,t1,t2,t3);
+endmodule
+module test;
+    reg a,b,c;
+    wire f;
+    circuit mod1(f,a,b,c);
+    initial begin
+    $dumpfile("circuit1.vcd");
+    $dumpvars(1);
+    $display("Circuit 1 Realisation \nA B Y");
+    $monitor(a," ",b," ",c);
+    a=0;b=0;c=0;
+    #1 a=0;b=0;c=1;
+    #1 a=0;b=1;c=0;
+    #1 a=0;b=1;c=1;
+    #1 a=1;b=0;c=0;
+    #1 a=1;b=0;c=1;
+    #1 a=1;b=1;c=0;
+    #1 a=1;b=1;c=1;
+    #1;
+end
+endmodule
+
+
+
+
+circuit 2
+
+module circuit(output f,input a,b,c,d);
+    wire abar,bbar,cbar,dbar,t1,t2,t3,t4,t5,t6,t7,t8;
+    not (abar,a),(bbar,b), (cbar,c), (dbar,d);
+    and (t1,abar,bbar,cbar,dbar), (t2,abar,bbar,cbar,d), (t3,abar,bbar,c,dbar), (t4,abar,b,cbar,dbar),
+    (t5,abar,b,cbar,d), (t6,abar,b,c,d), (t7,a,bbar,c,d), (t8,a,b,c,d);
+    or (f.t1,12,13,14,15,16,17,18);
+endmodule
+
+module test;
+    reg a,b,c,d;
+    wire f;
+    circuit mod1(f,a,b,c,d);
+    initial begin
+    $dumpfile("circuit2.vcd");
+    $dumpvars(1);
+    $display("Circuit 2 Realisation \nA B C D F");
+    $monitor(a," ",b," ",c," ",d," ",f);
+    a=0;b=0;c=0;d=0;
+    #1 a=0;b=0;c=0;d=1;
+    #1 a=0;b=0;c=1;d=0;
+    #1 a=0;b=0;c=1;d=1;
+    #1 a=0;b=1;c=0;d=0;
+    #1 a=0;b=1;c=0;d=1;
+    #1 a=0;b=1;c=1;d=0;
+    #1 a=0;b=1;c=1;d=1;
+    #1 a=1;b=0;c=0;d=0;
+    #1 a=1;b=0;c=0;d=1;
+    #1 a=1;b=0;c=1;d=0;
+    #1 a=1;b=0;c=1;d=1;
+    #1 a=1;b=1;c=0;d=0;
+    #1 a=1;b=1;c=0;d=1;
+    #1 a=1;b=1;c=1;d=0;
+    #1 a=1;b=1;c=1;d=1;
+    #1;
+end
+endmodule
+
+
+
+
+
+half adder
+
+module halfadder(a,b,s,c);
+    input a,b;
+    output s,c;
+    assign s=a^b;
+    assign c=a&b;
+endmodule
+
+module halfadder_tb;
+    reg a,b;
+    wire s,c;
+    halfadder gate(a,b,s,c);
+    initial begin
+        $dumpfile("halfadder.vcd");
+        $dumpvars(0,halfadder_tb);
+        a=0;b=0;
+        #1 a=0;b=1;
+        #1 a=1;b=0;
+        #1 a=1;b=1;
+        #1;
+    end
+endmodule
+
+
+
+
+full adder
+
+module fulladder(X,Y,Z,S,C);
+    output S,C;
+    input X,Y,Z;
+    assign S=X^Y^Z;
+    assign C=(X&Y)|((X^Y)&Z);
+endmodule
+module fulladder_tb;
+    wire S,C;
+    reg X,Y,Z;
+    
+    fulladder gate(X,Y,Z,S,C);
+    initial begin
+    $dumpfile("fulladder.vcd");
+    $dumpvars (0, fulladder_tb);
+    X = 0;Y = 0;Z = 0;
+    #1 X=0;Y=0;Z = 1;
+    #1 X=0;Y = 1;Z = 0;
+    #1 X=0;Y = 1;Z = 1;
+    #1 X=1;Y=0;Z = 0;
+    #1 X=1;Y=0;Z = 1;
+    #1 X=1;Y = 1;Z = 0;
+    #1 X = 1;Y = 1;Z = 1;
+    #1;
+    end
+endmodule
+
+
+
+
+binary to gray
+
+
+module bin2gray (input [3:0] bin, output [3:0] G);
+    assign G[3] = bin[3];
+    assign G[2] = bin[3]^bin[2];
+    assign G[1] = bin[2] ^ bin[1];
+    assign G[0] = bin[1]^bin[0];
+endmodule
+module tb;
+    reg [3:0] bin;
+    wire [3:0] G;
+    bin2gray gatel (bin,G);
+    initial begin
+    $dumpfile("bg.vcd");
+    $dumpvars (0, tb);
+    bin <= 0; #1;
+    bin <= 1; #1;
+    bin <= 2; #1;
+    bin <=3; #1;
+    bin <= 4; #1;
+    bin <= 5; #1;
+    bin <= 6; #1;
+    bin <= 7; #1;
+    bin <= 8; #1;
+    bin <= 9; #1;
+    bin <= 10; #1;
+    bin <= 11; #1;
+    bin <= 12; #1;
+    bin <= 13; #1;
+    bin <= 14; #1;
+    bin <= 15; #1;
+end
+endmodule
+
+
+
+
+gray to binary
+
+
+module gray2bin (input [3:0] G,output [3:0] bout);
+    assign bout[3]=G[3];
+    assign bout[2]=G[3]^G[2];
+    assign bout[1]=G[3]^G[2]^G[1];
+    assign bout[0]=G[3]^G[2]^G[1]^G[0];
+endmodule
+module tb;
+    reg [3:0] G;
+    wire [3:0] bout;
+    gray2bin gatel (G,bout);
+    initial begin
+    $dumpfile("gb.vcd");
+    $dumpvars (0, tb);
+    G<=0; #1;
+    G<=1; #1;
+    G<=2; #1;
+    G<=3; #1;
+    G<=4; #1;
+    G<=5; #1;
+    G<=6; #1;
+    G<=7; #1;
+    G<=8; #1;
+    G<=9; #1;
+    G<=10; #1;
+    G<=11; #1;
+    G<=12; #1;
+    G<=13; #1;
+    G<=14; #1;
+    G<=15; #1;
+end
+endmodule
+
+
+
+
+magnitude comparator
+
+
+module comparator(a,b,eq,lt,gt);
+    input [3:0] a,b;
+    output reg eq,lt,gt;
+    always @(a,b)
+    begin
+    if (a==b)
+        begin
+        eq = 1;
+        lt=0;
+        gt = 0;
+        end
+    else if (a>b)
+        begin
+        eq = 0;
+        lt = 0;
+        gt=1;
+        end
+    else
+        begin
+        eq = 0;
+        lt=1;
+        gt = 0;
+        end
+    end
+endmodule
+
+module comparator_tst;
+    reg [3:0] a,b;
+    wire eq,lt,gt;
+    comparator DUT (a,b,eq,lt,gt);
+    initial begin
+    $dumpfile("4bitmagcomp.vcd");
+    $dumpvars(0,comparator_tst);
+    $display("Magnitude Comparator gate Realisation \nA   B eq gt lt");
+    $monitor(a," ",b," ",eq,"  ",gt,"  ",lt);
+    a = 12;b = 12;
+    #1; a=8;b=4;
+    #1; a= 13;b= 15;
+    #1; a=0;b=2;
+    #1;
+    end
+endmodule
+
+
+
+
+
+
+
+
+

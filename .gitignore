@@ -5,5 +5,5 @@ a.out
 /*.vscode
 /*.out
 
-Verilog
+iverilog
 newfolder

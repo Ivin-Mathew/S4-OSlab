@@ -70,7 +70,7 @@ int main()
     processes[1].priority=3;
     processes[1].id=2;
     processes[1].turnaround_time=0;
-    processes[1].remaining_time=processes[0].burst_time;
+    processes[1].remaining_time=processes[1].burst_time;
     processes[1].waiting_time=0;
     processes[1].done=0;
 
@@ -80,7 +80,7 @@ int main()
     processes[2].priority=1;
     processes[2].id=3;
     processes[2].turnaround_time=0;
-    processes[2].remaining_time=processes[0].burst_time;
+    processes[2].remaining_time=processes[2].burst_time;
     processes[2].waiting_time=0;
     processes[2].done=0;
 
@@ -89,7 +89,7 @@ int main()
     processes[3].priority=5;
     processes[3].id=4;
     processes[3].turnaround_time=0;
-    processes[3].remaining_time=processes[0].burst_time;
+    processes[3].remaining_time=processes[3].burst_time;
     processes[3].waiting_time=0;
     processes[3].done=0;
 
@@ -98,7 +98,7 @@ int main()
     processes[4].priority=1;
     processes[4].id=5;
     processes[4].turnaround_time=0;
-    processes[4].remaining_time=processes[0].burst_time;
+    processes[4].remaining_time=processes[4].burst_time;
     processes[4].waiting_time=0;
     processes[4].done=0;
 

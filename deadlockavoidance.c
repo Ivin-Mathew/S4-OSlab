@@ -13,17 +13,21 @@ bool finish[MAX_PROCESSES] = {false};
 // Function to check if the system is in a safe state
 bool isSafeState(int processes, int resources) {
     int work[MAX_RESOURCES];
+    bool tempFinish[MAX_PROCESSES];
 
-    // Initialize work array
+    // Initialize work array and tempFinish array
     for (int i = 0; i < resources; i++) {
         work[i] = available[i];
+    }
+    for (int i = 0; i < processes; i++) {
+        tempFinish[i] = finish[i];
     }
 
     int count = 0;
     while (count < processes) {
         bool found = false;
         for (int i = 0; i < processes; i++) {
-            if (!finish[i]) {
+            if (!tempFinish[i]) {
                 bool canExecute = true;
                 for (int j = 0; j < resources; j++) {
                     if (need[i][j] > work[j]) {
@@ -32,11 +36,10 @@ bool isSafeState(int processes, int resources) {
                     }
                 }
                 if (canExecute) {
-                    // Process i can complete
                     for (int k = 0; k < resources; k++) {
                         work[k] += allocation[i][k];
                     }
-                    finish[i] = true;
+                    tempFinish[i] = true;
                     count++;
                     found = true;
                 }
@@ -79,6 +82,7 @@ bool requestResources(int process, int request[], int resources) {
 // Function to find and print the safe sequence
 void printSafeSequence(int processes, int resources) {
     int work[MAX_RESOURCES];
+    bool tempFinish[MAX_PROCESSES] = {false};
 
     // Initialize work array
     for (int i = 0; i < resources; i++) {
@@ -90,7 +94,7 @@ void printSafeSequence(int processes, int resources) {
     while (count < processes) {
         bool found = false;
         for (int i = 0; i < processes; i++) {
-            if (!finish[i]) {
+            if (!tempFinish[i]) {
                 bool canExecute = true;
                 for (int j = 0; j < resources; j++) {
                     if (need[i][j] > work[j]) {
@@ -103,14 +107,14 @@ void printSafeSequence(int processes, int resources) {
                     for (int k = 0; k < resources; k++) {
                         work[k] += allocation[i][k];
                     }
-                    finish[i] = true;
+                    tempFinish[i] = true;
                     count++;
                     found = true;
                 }
             }
         }
         if (!found) {
-            printf("\nNo safe sequence exists.\n");
+            printf("\nNo safe sequence exists. Deadlock inevitable.\n");
             return;
         }
     }

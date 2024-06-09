@@ -1,11 +1,7 @@
 #include<stdio.h>
-
-
-
 int bl,pr;
 int blocks[20][2];
 int page[20][2];
-
 void firstfit();
 void bestfit();
 void worstfit();
@@ -19,9 +15,6 @@ void main(){
 		scanf("%d",&blocks[i][0]);
 		blocks[i][1]=0;
 	}
-
-
-
 	printf("Enter no of processes:");
 	scanf("%d",&pr);
 	printf("Enter process sizes\n");
@@ -30,13 +23,11 @@ void main(){
 		scanf("%d",&page[i][0]);
 		page[i][1]=-1;
 	}
-
-	printf("1:First Fit\n2:Best fit\n3:Worst fit\n4:Exit");
+	printf("\n___________________________________________\n1:First Fit\n2:Best fit\n3:Worst fit\n4:Exit\n___________________________________________");
 	int opt=0;
 	while (opt!=4){
-		printf("Enter option:");
+		printf("\n\nEnter option:");
 		scanf("%d",&opt);
-
 		if(opt==1){
 			firstfit();
 		}
@@ -46,17 +37,15 @@ void main(){
 		else if(opt==3){
 			worstfit();
 		}
+		else
+			printf("Exitted.\n");
 	}
 }
-
-
 void firstfit(){
-
 	for(int i=0;i<pr;i++)
 		page[i][1]=-1;
 	for(int i=0;i<bl;i++)
 		blocks[i][1]=0;
-
 	for(int i=0;i<pr;i++){
 		int alloc=0;
 		while(alloc==0){
@@ -71,21 +60,21 @@ void firstfit(){
 			break;
 		}
 	}
-
 	printf("Allocated blocks:\n");
 	for(int i=0;i<pr;i++){
-		printf("Process %d : Block %d\n",i,page[i][1]);
+		if(page[i][1]==-1)
+			printf("Process %d : X\n",i);
+		else
+			printf("Process %d : Block %d\n",i,page[i][1]);
 	}
 
 }
 
 void bestfit(){
-	
 	for(int i=0;i<pr;i++)
 		page[i][1]=-1;
 	for(int i=0;i<bl;i++)
 		blocks[i][1]=0;
-
 	for(int i=0;i<pr;i++){
 		int cur=-1;
 		int temp=-1;
@@ -106,16 +95,17 @@ void bestfit(){
 		page[i][1]=cur;
 		blocks[cur][1]=1;
 	}
-
 	printf("Allocated blocks:\n");
 	for(int i=0;i<pr;i++){
-		printf("Process %d : Block %d\n",i,page[i][1]);
+		if(page[i][1]==-1)
+			printf("Process %d : X\n",i);
+		else
+			printf("Process %d : Block %d\n",i,page[i][1]);
 	}
 	
 }
 
 void worstfit(){
-
 	for(int i=0;i<pr;i++)
 		page[i][1]=-1;
 	for(int i=0;i<bl;i++)
@@ -139,9 +129,13 @@ void worstfit(){
 			blocks[cur][1]=1;
 		}
 	}
-
 	printf("Allocated blocks:\n");
 	for(int i=0;i<pr;i++){
-		printf("Process %d : Block %d\n",i,page[i][1]);
+		if(page[i][1]==-1)
+			printf("Process %d : X\n",i);
+		else
+			printf("Process %d : Block %d\n",i,page[i][1]);
 	}
 }
+
+

@@ -27,7 +27,6 @@ void main(){
 		for(i=0;i<n;i++){
 			rq[i]=rq_temp[i];
 		}
-		
 		printf("Enter choice: ");
 		scanf("%d",&choice);
 		switch(choice){
@@ -37,12 +36,10 @@ void main(){
 					break;
 			case 3:c_scan_sch(rq,n,initial_pos,TotalHeadMovement,order);
 					break;
-					
 			case 0: 
 					break;
 		}
 	}while(choice!=0);
-
 }
 
 void fcfs_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[]){
@@ -51,6 +48,7 @@ void fcfs_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[]){
 		order[i]=rq[i];
 		initial_pos=rq[i];
 	}
+	printf("FCFS Algorithm\n");
 	display_out(TotalHeadMovement,order,n);
 }
 
@@ -59,15 +57,14 @@ void display_out(int TotalHeadMovement,int order[], int n){
 	for(int i=0;i<n;i++){
 		printf("%d ",order[i]);
 	}
-	printf("\nTotalHeadMovement = %d ",TotalHeadMovement);
+	printf("\nTotalHeadMovement = %d \n\n",TotalHeadMovement);
 }
-
 
 void scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[])
 {
 	int move,i,j,k=0;
 	int index;
-	printf("Enter direction to move(1= high and 0= low):  ");
+	printf("SCAN Algorithm \nEnter direction to move(1= high and 0= low):  ");
 	scanf("%d",&move);
 	rq[n]=size;
 	n++;
@@ -99,9 +96,7 @@ void scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[])
 			initial_pos=rq[i];
 			order[k++]=rq[i];
 		}
-
 		TotalHeadMovement+=abs(size-rq[i-1]-1);
-		
 		initial_pos=size-1;
 		for(i=index-1;i>=0;i--){
 			TotalHeadMovement+=abs(rq[i] - initial_pos);
@@ -126,11 +121,12 @@ void scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[])
 	}
 	display_out(TotalHeadMovement,order,k);
 }
+
 void c_scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[])
 {
 	int move,i,j,k=0;
 	int index;
-	printf("Enter direction to move(1=high and 0=low):  ");
+	printf("C-SCAN Algorithm \nEnter direction to move(1=high and 0=low):  ");
 	scanf("%d",&move);
 	rq[n]=size;
 	n++;
@@ -161,10 +157,8 @@ void c_scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[]
 			initial_pos=rq[i];
 			order[k++]=rq[i];
 		}
-
 		TotalHeadMovement+=abs(size-rq[i-1]-1);
 		TotalHeadMovement+=abs(size-1-0);
-
 		initial_pos=0;
 		for(i=0;i<=index-1;i++){
 			TotalHeadMovement+=abs(rq[i] - initial_pos);
@@ -185,9 +179,7 @@ void c_scan_sch(int rq[],int n,int initial_pos,int TotalHeadMovement,int order[]
 			TotalHeadMovement+=abs(rq[i] - initial_pos);
 			initial_pos=rq[i];
 			order[k++]=rq[i];
-
 		}
 	}
 	display_out(TotalHeadMovement,order,k);
-
 }

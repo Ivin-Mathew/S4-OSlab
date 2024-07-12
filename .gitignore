@@ -4,6 +4,13 @@ a.out
 /*.odt
 /*.vscode
 /*.out
+/*.docx
+/*.pdf
 
 iverilog
 newfolder
+ExperimentsDocs
+ExperimentsDocs
+ShellScripts
+.gitignore
+Practice

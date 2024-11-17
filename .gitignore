@@ -12,5 +12,15 @@ newfolder
 ExperimentsDocs
 ExperimentsDocs
 ShellScripts
-.gitignore
 Practice
+Verilog
+.gitignore
+test.c
+.gitignore
+test2.c
+test.v
+test.c
+test_out
+producer.c
+circuit.vcd
+datawrite.c

@@ -8,6 +8,8 @@
 sem_t empty,full;
 pthread_mutex_t mutex;
 int buffer[5],count=0;
+
+
 void producer(void *args){
     for(int i=0;i<3;i++){
         sem_wait(&empty);
